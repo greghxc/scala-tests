@@ -21,9 +21,9 @@ object Shape {
     override def write(obj: Shape): JsValue = {
       obj match {
         case r: Rectangle =>
-          JsObject(Map("type" -> JsString("rectangle"), "parameters" -> JsObject(r.toJson.asJsObject.fields)))
+          JsObject(Map("type" -> JsString("rectangle"), "parameters" -> r.toJson))
         case c: Circle =>
-          JsObject(Map("type" -> JsString("circle"), "parameters" -> JsObject(c.toJson.asJsObject.fields)))
+          JsObject(Map("type" -> JsString("circle"), "parameters" -> c.toJson))
       }
     }
 
