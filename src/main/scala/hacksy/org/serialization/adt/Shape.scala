@@ -20,16 +20,19 @@ object Shape {
     import CircleProtocol.circleFormat
     override def write(obj: Shape): JsValue = {
       obj match {
-        case r: Rectangle => JsObject(r.toJson.asJsObject.fields + ("type" -> JsString("rectangle")))
-        case c: Circle => JsObject(c.toJson.asJsObject.fields + ("type" -> JsString("circle")))
+        case r: Rectangle =>
+          JsObject(Map("type" -> JsString("rectangle"), "parameters" -> JsObject(r.toJson.asJsObject.fields)))
+        case c: Circle =>
+          JsObject(Map("type" -> JsString("circle"), "parameters" -> JsObject(c.toJson.asJsObject.fields)))
       }
     }
 
     override def read(json: JsValue): Shape = {
-      json.asJsObject.fields.get("type") match {
-        case Some(JsString("circle")) => json.convertTo[Circle]
-        case Some(JsString("rectangle")) => json.convertTo[Rectangle]
-        case t => throw new RuntimeException(s"Invalid type: $t")
+      val jsonAsJsObject = json.asJsObject
+      (jsonAsJsObject.fields.get("type"), jsonAsJsObject.fields.get("parameters")) match {
+        case (Some(JsString("circle")), Some(p)) => p.convertTo[Circle]
+        case (Some(JsString("rectangle")), Some(p)) => p.convertTo[Rectangle]
+        case _ => throw new RuntimeException("Invalid Shape")
       }
     }
   }

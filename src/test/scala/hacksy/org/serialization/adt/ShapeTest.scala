@@ -5,9 +5,10 @@ import spray.json._
 
 class ShapeTest extends FunSuite with Matchers {
   val circle: Shape = Circle(5)
-  val circleString: String = "{\"radius\":5,\"type\":\"circle\"}"
+  val circleString: String = """{"type":"circle","parameters":{"radius":5}}"""
+
   val rectangle: Shape = Rectangle(4,5)
-  val rectangleString: String = "{\"height\":4,\"width\":5,\"type\":\"rectangle\"}"
+  val rectangleString: String = """{"type":"rectangle","parameters":{"height":4,"width":5}}"""
 
   test("serializes circle") {
     assert(circle.toJson.compactPrint == circleString)
@@ -23,5 +24,26 @@ class ShapeTest extends FunSuite with Matchers {
 
   test("deserializes rectangle") {
     assert(rectangleString.parseJson.convertTo[Shape] == rectangle)
+  }
+
+  test("missing parameters key") {
+    val invalidShapeString: String = """{"type":"rectangle"}"""
+    the [RuntimeException] thrownBy {
+      invalidShapeString.parseJson.convertTo[Shape]
+    } should have message "Invalid Shape"
+  }
+
+  test("incorrect type") {
+    val invalidShapeString: String = """{"type":"sirkle","parameters":{"radius":5}}"""
+    the [RuntimeException] thrownBy {
+      invalidShapeString.parseJson.convertTo[Shape]
+    } should have message "Invalid Shape"
+  }
+
+  test("missing everything") {
+    val invalidShapeString: String = "{}"
+    the [RuntimeException] thrownBy {
+      invalidShapeString.parseJson.convertTo[Shape]
+    } should have message "Invalid Shape"
   }
 }

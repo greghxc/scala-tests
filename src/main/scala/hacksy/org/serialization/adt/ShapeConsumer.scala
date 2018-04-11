@@ -1,9 +1,8 @@
 package hacksy.org.serialization.adt
 
-object ShapeConsumer extends ShapeConsumer
-
 trait ShapeConsumer {
-  def consumeShape(s: Shape, ctrl: ShapeController): String = {
+  val ctrl: ShapeController
+  def consumeShape(s: Shape): String = {
     s match {
       case c: Circle =>
         ctrl.doTheCircle(c)
