@@ -29,21 +29,21 @@ class ShapeTest extends FunSuite with Matchers {
 
   test("when missing parameters key") {
     val invalidShapeString: String = """{"type":"rectangle"}"""
-    the [RuntimeException] thrownBy {
+    the [DeserializationException] thrownBy {
       invalidShapeString.parseJson.convertTo[Shape]
     } should have message "Invalid Shape"
   }
 
   test("when incorrect type") {
     val invalidShapeString: String = """{"type":"sirkle","parameters":{"radius":5}}"""
-    the [RuntimeException] thrownBy {
+    the [DeserializationException] thrownBy {
       invalidShapeString.parseJson.convertTo[Shape]
     } should have message "Invalid Shape"
   }
 
   test("when missing everything") {
     val invalidShapeString: String = "{}"
-    the [RuntimeException] thrownBy {
+    the [DeserializationException] thrownBy {
       invalidShapeString.parseJson.convertTo[Shape]
     } should have message "Invalid Shape"
   }

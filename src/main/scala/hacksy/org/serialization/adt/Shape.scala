@@ -32,7 +32,7 @@ object Shape {
       (jsonAsJsObject.fields.get("type"), jsonAsJsObject.fields.get("parameters")) match {
         case (Some(JsString("circle")), Some(p)) => p.convertTo[Circle]
         case (Some(JsString("rectangle")), Some(p)) => p.convertTo[Rectangle]
-        case _ => throw new RuntimeException("Invalid Shape")
+        case _ => throw DeserializationException("Invalid Shape")
       }
     }
   }
